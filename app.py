@@ -5,9 +5,10 @@ import requests
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
+db = SQLAlchemy()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///weather-app.db'
 app.config.update(SECRET_KEY=os.urandom(24))
+db.init_app(app)
 
 
 class City(db.Model):
@@ -15,8 +16,8 @@ class City(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(85), nullable=False, unique=True)
 
-
-db.create_all()
+with app.app_context():
+    db.create_all()
 
 all_weather_cards = []
 
